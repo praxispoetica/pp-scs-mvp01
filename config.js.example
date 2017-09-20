@@ -1,0 +1,23 @@
+/**
+ * Example config.js file
+ * Copy this file to `config.js` and edit
+ * inserting local values
+ *
+ */
+var config = {}
+
+// mongodb config
+config.mongodb = {}
+config.mongodb.port = 27017
+config.mongodb.host = 'localhost'
+config.mongodb.db = 'mydb'
+
+// server config
+config.server = {}
+config.server.host = '0.0.0.0'
+config.server.port = '9999'
+
+// passport config
+config.secret = 'machadobebeagua'
+
+module.exports = config;
