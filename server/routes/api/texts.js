@@ -45,25 +45,38 @@ router.post('/texts', function(req, res) {
     })
 })
 
-// Text upsert on the basis of idLegacy in query
+// Text upsert on the basis of slug in query
 router.put('/texts', function(req, res) {
     // TODO support update as well as upsert
         // update: :_id present, define query and options accordingly
         // upsert: no :_id present, but :idLegacy present, define query and options accordingly
+    var texto = {}
+    texto["metaData"] = {}
+    texto["textBody"] = {}
+
+    console.log("texto", texto)
+    texto.textBody.value = req.body.content
+    texto.metaData.itemName = req.body.data.titulo
+    texto.metaData.itemSlug = req.body.data.slug
+    texto.metaData.publishedDate = req.body.data.fecha
+    texto.metaData.published = true
+    console.log('the new texto: ', texto)
+    // skip autor for now, since we would have to look that up :(
+
     var query = {
-        'idLegacy': req.body.idLegacy
+        'metaData.itemSlug': req.body.data.slug
     }
-    Text.findOneAndUpdate(query, req.body, {upsert: true, new: true},
+    Text.findOneAndUpdate(query, texto, {upsert: true, new: true},
       function(err, text) {
         if (err)
             return res.json({
                 error: "Error fetching text para upsert",
-                error: err
+                message: err
             });
         else if (!text)
             return res.json({
                 error: "Error finding text para upsert",
-                error: err
+                message: err
             });
         res.json({
             message: "Successfully upserted text",
