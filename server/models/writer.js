@@ -4,6 +4,7 @@ var Media = require('./base-content-attributes/media').Media
 var Link = require('./base-content-attributes/link').Link
 var TextLong = require('./base-content-attributes/text-long').TextLong
 var Person = require('./domain-content-attributes/person').Person
+var Tag = require('./base-content-attributes/tag').Tag
 
 var writerSchema = mongoose.Schema({
   idLegacy: Number,
@@ -19,6 +20,7 @@ var writerSchema = mongoose.Schema({
   writerWebsite: Link.schema,
   writerWebsiteMedia: Media.schema,
   writerYouTube: Link.schema,
+  tags: [Tag.schema]
 })
  
 exports.Writer = mongoose.model('Writer', writerSchema)

@@ -45,25 +45,46 @@ router.post('/writers', function(req, res) {
     })
 })
 
-// Writer upsert on the basis of idLegacy in query
+// Writer upsert on the basis of slug in query
 router.put('/writers', function(req, res) {
-    // TODO support update as well as upsert
-        // update: :_id present, define query and options accordingly
-        // upsert: no :_id present, but :idLegacy present, define query and options accordingly
+    var aWriter = {}
+    aWriter["metaData"] = {}
+    aWriter["writerTwitter"] = {}
+    aWriter.writerTwitter["linkAttributes"] = []
+    aWriter["writerFacebook"] = {}
+    aWriter.writerFacebook["linkAttributes"] = []
+    aWriter["writerBio"] = {}
+    aWriter["writerProfileMedia"] = {}
+    aWriter.writerProfileMedia["mediaLink"] = {}
+
+    console.log("aWriter", aWriter)
+    aWriter.metaData.itemName = req.body.data.nombre
+    aWriter.metaData.itemSlug = req.body.data.slug
+    aWriter.metaData.publishedDate = new Date().toISOString()
+    aWriter.metaData.published = true
+    aWriter.writerBio.value = req.body.content
+    aWriter.writerTwitter.linkUrl = req.body.data.twitter.url
+    aWriter.writerTwitter.linkAttributes.push({attrName: 'title', attrValue: req.body.data.twitter.profile_name})
+    aWriter.writerFacebook.linkUrl = req.body.data.facebook.url
+    aWriter.writerFacebook.linkAttributes.push({attrName: 'title', attrValue: req.body.data.facebook.profile_name})
+    aWriter.writerProfileMedia.mediaLink.linkUrl = req.body.data.picture
+    console.log('the new aWriter: ', aWriter)
+    // skip autor for now, since we would have to look that up
+
     var query = {
-        'idLegacy': req.body.idLegacy
+        'metaData.itemSlug': req.body.data.slug
     }
-    Writer.findOneAndUpdate(query, req.body, {upsert: true, new: true},
+    Writer.findOneAndUpdate(query, aWriter, {upsert: true, new: true},
       function(err, writer) {
         if (err)
             return res.json({
                 error: "Error fetching writer para upsert",
-                error: err
+                message: err
             });
         else if (!writer)
             return res.json({
                 error: "Error finding writer para upsert",
-                error: err
+                message: err
             });
         res.json({
             message: "Successfully upserted writer",
@@ -71,6 +92,7 @@ router.put('/writers', function(req, res) {
         })
     })
 })
+
 
 // CAUTION will delete all writers
 router.delete('/writers', function(req, res) {
