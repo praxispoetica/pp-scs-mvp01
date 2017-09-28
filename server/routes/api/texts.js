@@ -53,15 +53,18 @@ router.put('/texts', function(req, res) {
     var texto = {}
     texto["metaData"] = {}
     texto["textBody"] = {}
+    texto["textAuthor"] = []
 
     console.log("texto", texto)
     texto.textBody.value = req.body.content
+    // skip autor for now, since we would have to look that up :(
+        // no, now we got it!
+    texto.textAuthor.push(req.body.data.autor)    
     texto.metaData.itemName = req.body.data.titulo
     texto.metaData.itemSlug = req.body.data.slug
     texto.metaData.publishedDate = req.body.data.fecha
     texto.metaData.published = true
     console.log('the new texto: ', texto)
-    // skip autor for now, since we would have to look that up :(
 
     var query = {
         'metaData.itemSlug': req.body.data.slug
