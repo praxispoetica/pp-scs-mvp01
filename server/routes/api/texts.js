@@ -5,6 +5,7 @@ const Text = require('../../models/text').Text;
 router.get('/texts', function(req, res) {
   const querystring = (req.query.idLegacy) ? {idLegacy: req.query.idLegacy} : {}
   query = Text.find(querystring)
+  .populate('textAuthor')
   if (req.query.limit) {
     query.limit(req.query.limit)
   }
