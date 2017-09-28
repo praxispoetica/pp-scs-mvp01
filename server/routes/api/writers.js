@@ -128,6 +128,28 @@ router.get('/writers/:_id', function(req, res) {
     })
 })
 
+// API for /api/writer/:_id - specific writer with param _id
+router.get('/writersbyslug/:slug', function(req, res) {
+  query = Writer.findOne({"metaData.itemSlug": req.params.slug})
+  // optionally support field specifications in query strings
+  if (req.query.select) {
+    query.select(req.query.select)
+  }
+  query.exec(function(err, writer) {
+        if (err)
+            return res.json({
+                error: "Error fetching writers",
+                error: err
+            });
+        else if (!writer)
+            return res.json({
+                error: "Error finding writers",
+                error: err
+            });
+        res.send(writer);
+    })
+})
+
 router.delete('/writers/:_id', function(req, res) {
     Writer.findByIdAndRemove({
         _id: req.params._id
@@ -140,6 +162,5 @@ router.delete('/writers/:_id', function(req, res) {
         res.json({info: 'writer removed successfully'})
     })
 })
-
 
 module.exports = router
