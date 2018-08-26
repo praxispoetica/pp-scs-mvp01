@@ -1,5 +1,7 @@
 var config = require('../../config')
-var uri = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.db
+// var uri = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.db
+var uri = `mongodb://${config.mongodb.user}:${config.mongodb.password}@${config.mongodb.host}:${config.mongodb.port}/${config.mongodb.db}?authSource=admin`
+
 
 var mongoose = require('mongoose')
 mongoose.connect(uri)
